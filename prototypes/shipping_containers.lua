@@ -14,20 +14,49 @@ land_con.selection_box = {{-0.95, -0.95}, {0.95, 0.95}}
 land_con.resistances = data.raw.container["steel-chest"].resistances
 
 land_con.animation = {
-  layers = table.deepcopy(data.raw.container["steel-chest"].picture.layers)
+  layers = {
+    {
+      direction_count = 1,
+      filename = "__base__/graphics/entity/steel-chest/steel-chest.png",
+      priority = "extra-high",
+      width = 32,
+      height = 40,
+      scale = 1.5,
+      shift = util.by_pixel(0, -0.5),
+      hr_version =
+      {
+        direction_count = 1,
+        filename = "__base__/graphics/entity/steel-chest/hr-steel-chest.png",
+        priority = "extra-high",
+        width = 64,
+        height = 80,
+        shift = util.by_pixel(-0.25, -0.5),
+        scale = 0.75
+      }
+    },
+    {
+      direction_count = 1,
+      filename = "__base__/graphics/entity/steel-chest/steel-chest-shadow.png",
+      priority = "extra-high",
+      width = 56,
+      height = 22,
+      scale = 1.5,
+      shift = util.by_pixel(12*1.5, 7.5*1.5),
+      draw_as_shadow = true,
+      hr_version =
+      {
+        direction_count = 1,
+        filename = "__base__/graphics/entity/steel-chest/hr-steel-chest-shadow.png",
+        priority = "extra-high",
+        width = 110,
+        height = 46,
+        shift = util.by_pixel(12.25*1.5, 8*1.5),
+        draw_as_shadow = true,
+        scale = 0.75
+      }
+    }
+  }
 }
-for i=1,#land_con.animation.layers do
-  land_con.animation.layers[i].scale = (land_con.animation.layers[i].scale and land_con.animation.layers[i].scale*1.5) or 1.5
-  land_con.animation.layers[i].direction_count = 1
-  land_con.animation.layers[i].shift = land_con.animation.layers[i].shift or {0, 0}
-  land_con.animation.layers[i].shift[2] = land_con.animation.layers[i].shift[2] + 6
-  if land_con.animation.layers[i].hr_version then
-    land_con.animation.layers[i].hr_version.scale = (land_con.animation.layers[i].hr_version.scale and land_con.animation.layers[i].hr_version.scale*1.5) or 1.5
-    land_con.animation.layers[i].hr_version.direction_count = 1
-    land_con.animation.layers[i].hr_version.shift = land_con.animation.layers[i].hr_version.shift or {0, 0}
-    land_con.animation.layers[i].hr_version.shift[2] = land_con.animation.layers[i].hr_version.shift[2] + 0.1
-  end
-end
 
 land_con.guns = nil
 land_con.turret_animation = nil
@@ -49,17 +78,17 @@ local land_con_item =   {
   type = "item",
   name = land_con.name,
   place_result = land_con.name,
-  icon = land_con.icon,
-  icon_size = land_con.icon_size,
-  order = "d[basic-shipping-container]",
+  icon = "__shipping-containers__/graphics/icons/container_small.png",
+  icon_size = 64,
+  order = "d[shipping-container]",
   stack_size = 10,
-  subgroup = "storage",
+  subgroup = "transport",
 }
 
 local land_con_recipe = {
   type = "recipe",
-  name = land_con.name,
-  result = land_con.name,
+  name = land_con_item.name,
+  result = land_con_item.name,
   energy_required = 30,
   ingredients = {
     { "steel-plate", 10 },
@@ -81,9 +110,9 @@ local con_tech = {
   effects = {
     { type = "unlock-recipe", recipe = land_con_recipe.name },
   },
-  icon = "__base__/graphics/technology/steel-processing.png",
+  icon = "__shipping-containers__/graphics/icons/container.png",
   icon_size = 256,
-  icon_mipmaps=4,
+  icon_mipmaps=1,
   order = "xz",
   prerequisites = { "steel-processing" },
   unit = {
@@ -145,9 +174,9 @@ if data.raw.container["se-cargo-rocket-cargo-pod"] then
     place_result = space_con.name,
     icon = space_con.icon,
     icon_size = space_con.icon_size,
-    order = "d[space-shipping-container]",
+    order = "d[shipping-container-space]",
     stack_size = 10,
-    subgroup = "storage",
+    subgroup = "transport",
   }
 
   local space_con_recipe = {
@@ -173,8 +202,20 @@ if data.raw.container["se-cargo-rocket-cargo-pod"] then
     effects = {
       { type = "unlock-recipe", recipe = space_con_recipe.name },
     },
-    icon = "__space-exploration-graphics__/graphics/technology/rocket-cargo-safety.png",
-    icon_size = 128,
+    icons = {
+      {
+        icon = "__shipping-containers__/graphics/icons/container.png",
+        icon_size = 256,
+        icon_mipmaps = 1,
+      },
+      {
+        icon = "__space-exploration-graphics__/graphics/technology/rocket-cargo-safety.png",
+        icon_size = 128,
+        scale = 1.25,
+        shift = {48, 40},
+        icon_mipmaps = 1,
+      },
+    },
     order = "xz",
     prerequisites = { "shipping-containers",
                       "se-rocket-launch-pad" },

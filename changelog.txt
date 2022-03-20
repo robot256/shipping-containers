@@ -1,0 +1,8 @@
+---------------------------------------------------------------------------------------------------
+Version: 0.0.1
+Date: 2022-03-20
+  Features:
+    - Initial release
+    - Basic and Space Shipping Containers: "Car" type containers that can be moved by belts and Vehicle Wagons but not under their own power.
+    - Gate-crossing belts to move containers between areas, or load and unload Space Exploration spaceships. Gates stop containers but not items on belts.
+    - Container icons created by Freepik - Flaticon (https://www.flaticon.com/free-icons/container)

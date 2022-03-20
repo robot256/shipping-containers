@@ -5,7 +5,7 @@
   "title": "Intermodal Shipping Containers",
   "author": "robot256",
   "contact": "",
-  "homepage": "",
+  "homepage": "https://github.com/robot256/shipping-containers",
   "description": "No more belting cars! Movable shipping containers that be transported on belts. Compatible with Space Exploration.",
   "dependencies": [
 		"?space-exploration"
