@@ -1,6 +1,11 @@
-if settings.startup["shipping-containers-enable-belts"].value
+if settings.startup["shipping-containers-enable-belts"].value then
   local TECH_NAME = "gate-belts"
-  local VANILLA_BELTS = {"transport-belt", "fast-transport-belt", "express-transport-belt", "se-space-transport-belt"}
+  local VANILLA_BELTS = {
+    ["transport-belt"]=true,
+    ["fast-transport-belt"]=true,
+    ["express-transport-belt"]=true,
+    ["se-space-transport-belt"]=true,
+  }
 
   -- Technology to unlock stuff (all mixed together right now)
   local belt_tech = {
