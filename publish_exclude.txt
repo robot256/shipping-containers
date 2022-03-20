@@ -1,0 +1,5 @@
+.xcf
+.gitignore
+.git
+publish_exclude.txt
+.bat
