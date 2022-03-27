@@ -1,4 +1,15 @@
 
+local container_minimap = {
+  filename = "__shipping-containers__/graphics/entity/container-minimap-representation.png",
+  size = 26,
+  scale = 0.4,
+}
+local container_selected_minimap = {
+  filename = "__shipping-containers__/graphics/entity/container-selected-minimap-representation.png",
+  size = 26,
+  scale = 0.4,
+}
+
 
 -- Land-based container
 local land_con = table.deepcopy(data.raw.car["car"])
@@ -9,7 +20,7 @@ land_con.icon = data.raw.container["steel-chest"].icon
 land_con.icon_size = data.raw.container["steel-chest"].icon_size
 land_con.inventory_size = data.raw.container["steel-chest"].inventory_size*2
 land_con.max_health = data.raw.container["steel-chest"].max_health*2
-land_con.collision_box = {{-0.95, -0.95}, {0.95, 0.95}}
+land_con.collision_box = {{-0.85, -0.85}, {0.85, 0.85}}
 land_con.selection_box = {{-0.95, -0.95}, {0.95, 0.95}}
 land_con.resistances = data.raw.container["steel-chest"].resistances
 
@@ -22,17 +33,7 @@ land_con.animation = {
       width = 32,
       height = 40,
       scale = 1.5,
-      shift = util.by_pixel(0, -0.5),
-      hr_version =
-      {
-        direction_count = 1,
-        filename = "__base__/graphics/entity/steel-chest/hr-steel-chest.png",
-        priority = "extra-high",
-        width = 64,
-        height = 80,
-        shift = util.by_pixel(-0.25, -0.5),
-        scale = 0.75
-      }
+      shift = util.by_pixel(0, 2),
     },
     {
       direction_count = 1,
@@ -41,18 +42,30 @@ land_con.animation = {
       width = 56,
       height = 22,
       scale = 1.5,
-      shift = util.by_pixel(12*1.5, 7.5*1.5),
+      shift = util.by_pixel(18, 12),
       draw_as_shadow = true,
-      hr_version =
-      {
-        direction_count = 1,
-        filename = "__base__/graphics/entity/steel-chest/hr-steel-chest-shadow.png",
-        priority = "extra-high",
-        width = 110,
-        height = 46,
-        shift = util.by_pixel(12.25*1.5, 8*1.5),
-        draw_as_shadow = true,
-        scale = 0.75
+    },
+    hr_version = {
+      layers = {
+        {
+          direction_count = 1,
+          filename = "__base__/graphics/entity/steel-chest/hr-steel-chest.png",
+          priority = "extra-high",
+          width = 64,
+          height = 80,
+          shift = util.by_pixel(-0.1875, 2),
+          scale = 0.75
+        },
+        {
+          direction_count = 1,
+          filename = "__base__/graphics/entity/steel-chest/hr-steel-chest-shadow.png",
+          priority = "extra-high",
+          width = 110,
+          height = 46,
+          shift = util.by_pixel(18.5, 13),
+          draw_as_shadow = true,
+          scale = 0.75
+        }
       }
     }
   }
@@ -69,10 +82,11 @@ land_con.rotation_speed = 0
 land_con.has_belt_immunity = false
 land_con.light = nil
 land_con.light_animation = nil
-land_con.weight = 250
+land_con.weight = 100
 land_con.allow_passengers = false
 land_con.equipment_grid = nil
---land_con.minimap-representation=
+land_con.minimap_representation = container_minimap
+land_con.selected_minimap_representation = container_selected_minimap
 
 local land_con_item =   {
   type = "item",
@@ -138,7 +152,7 @@ if data.raw.container["se-cargo-rocket-cargo-pod"] then
   space_con.icon_size = data.raw.container["se-cargo-rocket-cargo-pod"].icon_size
   space_con.inventory_size = data.raw.container["steel-chest"].inventory_size*2
   space_con.max_health = data.raw.container["se-cargo-rocket-cargo-pod"].max_health
-  space_con.collision_box = {{-0.95, -0.95}, {0.95, 0.95}}
+  space_con.collision_box = {{-0.85, -0.85}, {0.85, 0.85}}
   space_con.selection_box = {{-0.95, -0.95}, {0.95, 0.95}}
   space_con.resistances = data.raw.container["se-cargo-rocket-cargo-pod"].resistances
 
@@ -163,10 +177,11 @@ if data.raw.container["se-cargo-rocket-cargo-pod"] then
   space_con.has_belt_immunity = false
   space_con.light = nil
   space_con.light_animation = nil
-  space_con.weight = 250
+  space_con.weight = 150
   space_con.allow_passengers = false
   space_con.equipment_grid = nil
-  --space_con.minimap-representation=
+  space_con.minimap_representation = container_minimap
+  space_con.selected_minimap_representation = container_selected_minimap
 
   local space_con_item =   {
     type = "item",

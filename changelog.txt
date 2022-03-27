@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.2
+Date: 2022-03-27
+  Changes:
+    - Shrunk collision box so that colliding with a small electric pole at a corner will center the container on the belt.
+    - New minimap sprite!
+    - Tweaked basic container sprite alignment.
+---------------------------------------------------------------------------------------------------
 Version: 0.0.1
 Date: 2022-03-20
   Features:
