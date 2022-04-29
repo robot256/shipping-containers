@@ -10,14 +10,37 @@ local container_selected_minimap = {
   scale = 0.4,
 }
 
+local function copy_icons(source, target)
+  if source.icons then
+    target.icons = table.deepcopy(source.icons)
+    target.icon = nil
+    target.icon_size = nil
+  elseif source.icon then
+    target.icons = nil
+    target.icon = source.icon
+    target.icon_size = source.icon_size
+  else
+    error("Why no icons in "..source.name.."?")
+  end
+end
+
+-- Item subgroup for shipping-containers
+data:extend{
+  {
+    type = "item-subgroup",
+    name = "shipping-container",
+    group = "logistics",
+    order = "f[shipping-container]"
+  },
+}
 
 -- Land-based container
 local land_con = table.deepcopy(data.raw.car["car"])
 land_con.name = "basic-shipping-container"
 land_con.minable.result = land_con.name
-
-land_con.icon = data.raw.container["steel-chest"].icon
-land_con.icon_size = data.raw.container["steel-chest"].icon_size
+land_con.icon = "__shipping-containers__/graphics/icons/container_small.png"
+land_con.icon_size = 64
+land_con.icons = nil
 land_con.inventory_size = data.raw.container["steel-chest"].inventory_size*2
 land_con.max_health = data.raw.container["steel-chest"].max_health*2
 land_con.collision_box = {{-0.85, -0.85}, {0.85, 0.85}}
@@ -78,6 +101,7 @@ land_con.turret_rotation_speed = nil
 
 land_con.energy_source = {type="void"}
 land_con.effectivity = 0
+land_con.consumption = "0W"   --- Set to zero so the AAI Programmable Vehicles ignores shipping container weapons
 land_con.rotation_speed = 0
 land_con.has_belt_immunity = false
 land_con.light = nil
@@ -94,9 +118,9 @@ local land_con_item =   {
   place_result = land_con.name,
   icon = "__shipping-containers__/graphics/icons/container_small.png",
   icon_size = 64,
-  order = "d[shipping-container]",
+  order = "d[basic-shipping-container]",
   stack_size = 10,
-  subgroup = "transport",
+  subgroup = "shipping-container",
 }
 
 local land_con_recipe = {
@@ -147,9 +171,7 @@ if data.raw.container["se-cargo-rocket-cargo-pod"] then
   local space_con = table.deepcopy(data.raw.car["car"])
   space_con.name = "se-space-shipping-container"
   space_con.minable.result = space_con.name
-
-  space_con.icon = data.raw.container["se-cargo-rocket-cargo-pod"].icon
-  space_con.icon_size = data.raw.container["se-cargo-rocket-cargo-pod"].icon_size
+  copy_icons(data.raw.container["se-cargo-rocket-cargo-pod"], space_con)
   space_con.inventory_size = data.raw.container["steel-chest"].inventory_size*2
   space_con.max_health = data.raw.container["se-cargo-rocket-cargo-pod"].max_health
   space_con.collision_box = {{-0.85, -0.85}, {0.85, 0.85}}
@@ -173,6 +195,7 @@ if data.raw.container["se-cargo-rocket-cargo-pod"] then
 
   space_con.energy_source = {type="void"}
   space_con.effectivity = 0
+  space_con.consumption = "0W"   --- Set to zero so the AAI Programmable Vehicles ignores shipping container weapons
   space_con.rotation_speed = 0
   space_con.has_belt_immunity = false
   space_con.light = nil
@@ -189,9 +212,9 @@ if data.raw.container["se-cargo-rocket-cargo-pod"] then
     place_result = space_con.name,
     icon = space_con.icon,
     icon_size = space_con.icon_size,
-    order = "d[shipping-container-space]",
+    order = "e[se-space-shipping-container]",
     stack_size = 10,
-    subgroup = "transport",
+    subgroup = "shipping-container",
   }
 
   local space_con_recipe = {

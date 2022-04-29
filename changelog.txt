@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.3
+Date: 2022-04-28
+  Changes:
+    - Shortened name to just "Shipping Containers"
+  Bugfixes:
+    - Fixed compatibility with AAI Containers.
+---------------------------------------------------------------------------------------------------
 Version: 0.0.2
 Date: 2022-03-27
   Changes:
