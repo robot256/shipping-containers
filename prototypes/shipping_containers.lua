@@ -14,7 +14,7 @@ local function copy_icons(source, target)
   if source.icons then
     target.icons = table.deepcopy(source.icons)
     target.icon = nil
-    target.icon_size = nil
+    target.icon_size = source.icon_size
   elseif source.icon then
     target.icons = nil
     target.icon = source.icon
