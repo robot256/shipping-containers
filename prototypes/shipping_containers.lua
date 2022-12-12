@@ -37,7 +37,7 @@ data:extend{
 -- Land-based container
 local land_con = table.deepcopy(data.raw.car["car"])
 land_con.name = "basic-shipping-container"
-land_con.minable.result = land_con.name
+land_con.minable = {result=land_con.name, mining_time=1}
 land_con.icon = "__shipping-containers__/graphics/icons/container_small.png"
 land_con.icon_size = 64
 land_con.icons = nil
@@ -170,7 +170,7 @@ if data.raw.container["se-cargo-rocket-cargo-pod"] then
   -- Space-compatible container
   local space_con = table.deepcopy(data.raw.car["car"])
   space_con.name = "se-space-shipping-container"
-  space_con.minable.result = space_con.name
+  space_con.minable = {result=space_con.name, mining_time=1}
   copy_icons(data.raw.container["se-cargo-rocket-cargo-pod"], space_con)
   space_con.inventory_size = data.raw.container["steel-chest"].inventory_size*2
   space_con.max_health = data.raw.container["se-cargo-rocket-cargo-pod"].max_health
