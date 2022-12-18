@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.5
+Date: 2022-12-18
+  Changes:
+    - Name changed from "Intermodal Shipping Containers" to "Shipping Containers"
+  Bugfixes:
+    - Attempted to fix compatibility with mods that use weird belt icon formats.
+---------------------------------------------------------------------------------------------------
 Version: 0.0.4
 Date: 2022-12-17
   Bugfixes:
