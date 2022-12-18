@@ -54,8 +54,11 @@ if settings.startup["shipping-containers-enable-belts"].value then
   }
 
   local function applyGateBeltIcon(belt, gate)
+    log(serpent.block({belt_icon=belt.icon, belt_icons=belt.icons, belt_icon_size=belt.icon_size, belt_icon_mipmaps=belt.icon_mipmaps, gate_icon=gate.icon, gate_icon_size=gate.icon_size, gate_icon_mipmaps=gate.icon_mipmaps}))
     if belt.icons then
-      local gate_scale = (gate.icon_size/belt.icons[1].icon_size)*0.5*(belt.icons[1].scale or 32/belt.icons[1].icon_size)
+      local belt_icon_size = belt.icons[1].icon_size or belt.icon_size
+      local belt_icon_scale = belt.icons[1].scale
+      local gate_scale = (gate.icon_size/belt_icon_size)*0.5*(belt_icon_scale or 32/belt_icon_size)
       table.insert(belt.icons, {
           icon = gate.icon,
           icon_size = gate.icon_size,
