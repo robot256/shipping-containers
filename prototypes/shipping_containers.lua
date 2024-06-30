@@ -111,6 +111,8 @@ land_con.allow_passengers = false
 land_con.equipment_grid = nil
 land_con.minimap_representation = container_minimap
 land_con.selected_minimap_representation = container_selected_minimap
+land_con.sound_no_fuel = nil
+land_con.working_sound = nil
 
 local land_con_item =   {
   type = "item",
@@ -205,6 +207,9 @@ if data.raw.container["se-cargo-rocket-cargo-pod"] then
   space_con.equipment_grid = nil
   space_con.minimap_representation = container_minimap
   space_con.selected_minimap_representation = container_selected_minimap
+  space_con.sound_no_fuel = nil
+  space_con.working_sound = nil
+
 
   local space_con_item =   {
     type = "item",
