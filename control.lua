@@ -23,11 +23,9 @@ local function cancelPlacement(entity, player_index, message, robot)
   local player = player_index and game.players[player_index]
   if player then
     refund = player.insert{name=entity.name, count=1}
-    entity.surface.create_entity{
-      name = "flying-text",
+    player.create_local_flying_text{
       position = entity.position,
       text = message,
-      render_player_index = player_index,
     }
   elseif robot and robot.valid then
     -- Give the robot back the thing
@@ -52,7 +50,7 @@ end
 ----------
 -- Make sure gate-belt is only built on top of existing gate or gate ghost
 local function OnBuilt(event)
-  local entity = event.created_entity or event.entity or event.destination
+  local entity = event.entity or event.destination
 
   -- Check if a gate is already there
   local nearby = entity.surface.find_entities_filtered{position=entity.position, type="gate"}
@@ -77,7 +75,7 @@ local function OnMined(event)
   local position = entity.position
 
   local belts = surface.find_entities_filtered{position=entity.position, type="transport-belt"}
-  if belts and belts[1] and global.gateBeltTypes[belts[1].name] then
+  if belts and belts[1] and storage.gateBeltTypes[belts[1].name] then
     local belt = belts[1]
     if not belt.to_be_deconstructed() then
       if event.player_index then
@@ -112,14 +110,9 @@ local function OnDestroyed(event)
   local position = entity.position
 
   local found = surface.find_entities_filtered{position=entity.position, type="transport-belt"}
-  if found and found[1] and global.gateBeltTypes[found[1].name] then
+  if found and found[1] and storage.gateBeltTypes[found[1].name] then
     local belt = found[1]
     if not belt.to_be_deconstructed() then
-      surface.create_entity{
-        name = "flying-text",
-        position = position,
-        text = {"shipping-container.gate-belt-destroyed", belt.localised_name},
-      }
       belt.destroy()
     end
   end
@@ -129,7 +122,7 @@ end
 -- When gate is marked for deconstruction, also mark belt
 local function OnMarked(event)
   local found = event.entity.surface.find_entities_filtered{position=event.entity.position, type="transport-belt"}
-  if found and found[1] and global.gateBeltTypes[found[1].name] then
+  if found and found[1] and storage.gateBeltTypes[found[1].name] then
     local belt = found[1]
     if event.player_index then
       local player = game.players[event.player_index]
@@ -153,6 +146,7 @@ end
 
 -- When deconstruction of belt or gate is cancelled, spill belt item if no gate
 local function OnCancelled(event)
+  local player = event.player_index and game.players[event.player_index]
   local entity = event.entity
   local surface = entity.surface
   local force = (event.player_index and game.players[event.player_index].force)
@@ -161,13 +155,13 @@ local function OnCancelled(event)
     -- gate deconstruction was cancelled
     -- cancel deconstruction of belt underneath
     local found = surface.find_entities_filtered{position=entity.position, type="transport-belt"}
-    if found and found[1] and global.gateBeltTypes[found[1].name] then
+    if found and found[1] and storage.gateBeltTypes[found[1].name] then
       local belt = found[1]
       if belt.to_be_deconstructed() then
         belt.cancel_deconstruction(force or belt.force, event.player_index)
       end
     end
-  elseif global.gateBeltTypes[entity.name] then
+  elseif storage.gateBeltTypes[entity.name] then
     -- belt deconstruction cancelled
     -- cancel gate deconstruction
     local found = surface.find_entities_filtered{position=entity.position, type="gate"}
@@ -194,11 +188,12 @@ local function OnCancelled(event)
         end
         if not spilled or not next(spilled) then
           -- could not spill item
-          surface.create_entity{
-            name = "flying-text",
-            position = position,
-            text = {"shipping-container.gate-belt-destroyed", belt.localised_name},
-          }
+          if player then
+            player.create_local_flying_text{
+              position = position,
+              text = {"shipping-container.gate-belt-destroyed", belt.localised_name},
+            }
+          end
         end
         belt.destroy()
 
@@ -212,13 +207,13 @@ end
 -- Initialization
 -----------
 local function InitEvents()
-  if not global.gateBeltTypes then
+  if not storage.gateBeltTypes then
     log("No global list of gate-belt types found.")
   else
     -- Register gate-belt interaction events (this is dependent upon startup settings)
     local belt_filters = {}
-    for name,_ in pairs(global.gateBeltTypes) do
-      table.insert(belt_filters, {filter="name", name=name, mode="or"})
+    for name,_ in pairs(storage.gateBeltTypes) do
+      table.insert(belt_filters, {filter="name", name=name})
     end
     if #belt_filters > 0 then
       script.on_event(defines.events.on_built_entity, OnBuilt, belt_filters)
@@ -226,21 +221,23 @@ local function InitEvents()
       script.on_event(defines.events.on_entity_cloned, OnBuilt, belt_filters)
       script.on_event(defines.events.script_raised_built, OnBuilt, belt_filters)
       script.on_event(defines.events.script_raised_revive, OnBuilt, belt_filters)
+      script.on_event(defines.events.on_space_platform_built_entity, OnBuilt, belt_filters)
 
       local gate_filters = {
-          {filter="type", type="gate", mode="or"},
-          {filter="ghost_type", type="gate", mode="or"}
+          {filter="type", type="gate"},
+          {filter="ghost_type", type="gate"}
         }
       script.on_event(defines.events.on_player_mined_entity, OnMined, gate_filters)
       script.on_event(defines.events.on_robot_mined_entity, OnMined, gate_filters)
       script.on_event(defines.events.on_entity_died, OnDestroyed, gate_filters)
       script.on_event(defines.events.script_raised_destroy, OnDestroyed, gate_filters)
       script.on_event(defines.events.on_pre_ghost_deconstructed, OnMined, gate_filters)
+      script.on_event(defines.events.on_space_platform_mined_entity, OnMined, gate_filters)
 
       script.on_event(defines.events.on_marked_for_deconstruction, OnMarked, gate_filters)
 
       local gate_belt_filters = util.table.deepcopy(belt_filters)
-      table.insert(gate_belt_filters, {filter="type", type="gate", mode="or"})
+      table.insert(gate_belt_filters, {filter="type", type="gate"})
       script.on_event(defines.events.on_cancelled_deconstruction, OnCancelled, gate_belt_filters)
     else
       -- No gate belts exist, do not subscribe to any events
@@ -250,12 +247,12 @@ local function InitEvents()
 end
 
 local function InitGlobalsAndEvents()
-  global.gateBeltTypes = {}
+  storage.gateBeltTypes = {}
 
-  for name,belt in pairs(game.get_filtered_entity_prototypes{{filter="type", type="transport-belt"}}) do
+  for name,belt in pairs(prototypes.get_entity_filtered{{filter="type", type="transport-belt"}}) do
     if name:match("gate%-belt") then
       log("Found Gate Belt '"..name.."'")
-      global.gateBeltTypes[name] = true
+      storage.gateBeltTypes[name] = true
     end
   end
 

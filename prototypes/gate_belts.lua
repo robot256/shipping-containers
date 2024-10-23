@@ -19,7 +19,6 @@ if settings.startup["shipping-containers-enable-belts"].value then
           icon_size = 64,
           scale = 1.5,
           tint = {a=1, b=0.5, g=0.5, r=0.5},
-          icon_mipmaps = 4,
         },
         {
           icon = "__base__/graphics/icons/gate.png",
@@ -27,7 +26,6 @@ if settings.startup["shipping-containers-enable-belts"].value then
           scale = 1.0,
           shift = {0, -24},
           tint = {a=1, b=0.2, g=1, r=1},
-          icon_mipmaps = 4,
         }
       },
       order = "zz",
@@ -53,42 +51,6 @@ if settings.startup["shipping-containers-enable-belts"].value then
     },
   }
 
-  local function applyGateBeltIcon(belt, gate)
-    log(serpent.block({belt_icon=belt.icon, belt_icons=belt.icons, belt_icon_size=belt.icon_size, belt_icon_mipmaps=belt.icon_mipmaps, gate_icon=gate.icon, gate_icon_size=gate.icon_size, gate_icon_mipmaps=gate.icon_mipmaps}))
-    if belt.icons then
-      local belt_icon_size = belt.icons[1].icon_size or belt.icon_size
-      local belt_icon_scale = belt.icons[1].scale
-      local gate_scale = (gate.icon_size/belt_icon_size)*0.5*(belt_icon_scale or 32/belt_icon_size)
-      table.insert(belt.icons, {
-          icon = gate.icon,
-          icon_size = gate.icon_size,
-          icon_mipmaps = gate.icon_mipmaps,
-          scale = gate_scale,
-          shift = {gate.icon_size*gate_scale*0.5, -gate.icon_size*gate_scale*0.5}
-        })
-    else
-      local gate_scale = (gate.icon_size/belt.icon_size)*0.5*(32/belt.icon_size)
-      belt.icons = {
-        {
-          icon = belt.icon,
-          icon_size = belt.icon_size,
-          icon_mipmaps = belt.icon_mipmaps,
-          scale = 32/belt.icon_size
-        },
-        {
-          icon = gate.icon,
-          icon_size = gate.icon_size,
-          icon_mipmaps = gate.icon_mipmaps,
-          scale = gate_scale,
-          shift = {gate.icon_size*gate_scale*0.5, -gate.icon_size*gate_scale*0.5}
-        },
-      }
-      belt.icon = nil
-      belt.icon_size = nil
-      belt.icon_mipmaps = nil
-    end
-  end
-
   local function makeGateBelt(new_name, source_name)
     local belt = table.deepcopy(data.raw["transport-belt"][source_name])
     if not belt then
@@ -101,7 +63,7 @@ if settings.startup["shipping-containers-enable-belts"].value then
     belt.localised_description = {"shipping-container.gate-belt-description"}
     belt.minable.result = belt.name
     belt.selection_priority = 55
-    belt.collision_mask = {"transport-belt-layer"}
+    belt.collision_mask = {layers={transport_belt=true}}
     belt.next_upgrade = nil
     belt.fast_replaceable_group = "gate-belt"
 
@@ -116,28 +78,41 @@ if settings.startup["shipping-containers-enable-belts"].value then
       type = "recipe",
       name = belt.name,
       category = "crafting",
-      result = belt.name,
+      results = {{type="item", name=belt.name, amount=1}},
       energy_required = 10,
-      result_count = 1,
       enabled = false,
       always_show_made_in = true,
     }
     if belt.related_underground_belt then
       belt_recipe.ingredients = {
-        { name = belt.related_underground_belt, amount = 2 },
-        { name = "advanced-circuit", amount = 2 },
+        { type="item", name = belt.related_underground_belt, amount = 2 },
+        { type="item", name = "advanced-circuit", amount = 2 },
       }
       belt.related_underground_belt = nil
     else
       belt_recipe.ingredients = {
-        { name = source_name, amount = 2 },
-        { name = "iron-gear-wheel", amount = 10 },
-        { name = "advanced-circuit", amount = 2 },
+        { type="item", name = source_name, amount = 2 },
+        { type="item", name = "iron-gear-wheel", amount = 10 },
+        { type="item", name = "advanced-circuit", amount = 2 },
       }
     end
-
-    applyGateBeltIcon(belt, data.raw.gate["gate"])
-    applyGateBeltIcon(belt_item, data.raw.gate["gate"])
+    if not belt.icons then
+      belt.icons = {{icon=belt.icon, icon_size=belt.icon_size}}
+      belt.icon = nil
+      belt.icon_size = nil
+    end
+    if not belt_item.icons then
+      belt_item.icons = {{icon=belt_item.icon, icon_size=belt_item.icon_size}}
+      belt_item.icon = nil
+      belt_item.icon_size = nil
+    end
+    local gate_icon = data.raw.gate["gate"].icons or {{icon=data.raw.gate["gate"].icon, icon_size=data.raw.gate["gate"].icon_size or 64}}
+    
+    log(serpent.block(belt_item.icons))
+    log(serpent.block(belt.icons))
+    log(serpent.block(gate_icon))
+    belt.icons = util.combine_icons(belt.icons, gate_icon, {tint={1,1,1,1}, scale=0.6, shift={7,-7}}, 64)
+    belt_item.icons = util.combine_icons(belt_item.icons, gate_icon, {tint={1,1,1,1}, scale=0.6, shift={7,-7}}, 64)
 
     data:extend{belt, belt_item, belt_recipe}
     -- Add all belts to the same technology (eventually make this a script unlock?)

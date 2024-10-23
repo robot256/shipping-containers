@@ -38,12 +38,12 @@ data:extend{
 local land_con = table.deepcopy(data.raw.car["car"])
 land_con.name = "basic-shipping-container"
 land_con.minable = {result=land_con.name, mining_time=1}
-land_con.icon = "__shipping-containers__/graphics/icons/container_small.png"
-land_con.icon_size = 64
-land_con.icons = nil
+land_con.icons = {{icon="__shipping-containers__/graphics/icons/container_small.png", icon_size = 64}}
+land_con.icon = nil
+land_con.icon_size = nil
 land_con.inventory_size = data.raw.container["steel-chest"].inventory_size*2
 land_con.max_health = data.raw.container["steel-chest"].max_health*2
-land_con.collision_box = {{-0.85, -0.85}, {0.85, 0.85}}
+land_con.collision_box = {{-0.75, -0.75}, {0.75, 0.75}}
 land_con.selection_box = {{-0.95, -0.95}, {0.95, 0.95}}
 land_con.resistances = data.raw.container["steel-chest"].resistances
 
@@ -53,43 +53,20 @@ land_con.animation = {
       direction_count = 1,
       filename = "__base__/graphics/entity/steel-chest/steel-chest.png",
       priority = "extra-high",
-      width = 32,
-      height = 40,
-      scale = 1.5,
-      shift = util.by_pixel(0, 2),
+      width = 64,
+      height = 80,
+      shift = util.by_pixel(-0.1875, 2),
+      scale = 0.75
     },
     {
       direction_count = 1,
       filename = "__base__/graphics/entity/steel-chest/steel-chest-shadow.png",
       priority = "extra-high",
-      width = 56,
-      height = 22,
-      scale = 1.5,
-      shift = util.by_pixel(18, 12),
+      width = 110,
+      height = 46,
+      shift = util.by_pixel(18.5, 13),
       draw_as_shadow = true,
-    },
-    hr_version = {
-      layers = {
-        {
-          direction_count = 1,
-          filename = "__base__/graphics/entity/steel-chest/hr-steel-chest.png",
-          priority = "extra-high",
-          width = 64,
-          height = 80,
-          shift = util.by_pixel(-0.1875, 2),
-          scale = 0.75
-        },
-        {
-          direction_count = 1,
-          filename = "__base__/graphics/entity/steel-chest/hr-steel-chest-shadow.png",
-          priority = "extra-high",
-          width = 110,
-          height = 46,
-          shift = util.by_pixel(18.5, 13),
-          draw_as_shadow = true,
-          scale = 0.75
-        }
-      }
+      scale = 0.75
     }
   }
 }
@@ -114,12 +91,11 @@ land_con.selected_minimap_representation = container_selected_minimap
 land_con.sound_no_fuel = nil
 land_con.working_sound = nil
 
-local land_con_item =   {
+local land_con_item = {
   type = "item",
   name = land_con.name,
   place_result = land_con.name,
-  icon = "__shipping-containers__/graphics/icons/container_small.png",
-  icon_size = 64,
+  icons = {{icon="__shipping-containers__/graphics/icons/container_small.png", icon_size = 64}},
   order = "d[basic-shipping-container]",
   stack_size = 10,
   subgroup = "shipping-container",
@@ -128,12 +104,12 @@ local land_con_item =   {
 local land_con_recipe = {
   type = "recipe",
   name = land_con_item.name,
-  result = land_con_item.name,
+  results = {{type="item", name=land_con_item.name, amount=1}},
   energy_required = 30,
   ingredients = {
-    { "steel-plate", 10 },
-    { "steel-chest", 2 },
-    { "electronic-circuit", 4 },
+    { type="item", name="steel-plate", amount=10 },
+    { type="item", name="steel-chest", amount=2 },
+    { type="item", name="electronic-circuit", amount=4 },
   },
   requester_paste_multiplier = 2,
   enabled = false,
@@ -176,7 +152,7 @@ if data.raw.container["se-cargo-rocket-cargo-pod"] then
   copy_icons(data.raw.container["se-cargo-rocket-cargo-pod"], space_con)
   space_con.inventory_size = data.raw.container["steel-chest"].inventory_size*2
   space_con.max_health = data.raw.container["se-cargo-rocket-cargo-pod"].max_health
-  space_con.collision_box = {{-0.85, -0.85}, {0.85, 0.85}}
+  space_con.collision_box = {{-0.75, -0.75}, {0.75, 0.75}}
   space_con.selection_box = {{-0.95, -0.95}, {0.95, 0.95}}
   space_con.resistances = data.raw.container["se-cargo-rocket-cargo-pod"].resistances
 
@@ -185,9 +161,6 @@ if data.raw.container["se-cargo-rocket-cargo-pod"] then
   }
   for i=1,#space_con.animation.layers do
     space_con.animation.layers[i].direction_count = 1
-    if space_con.animation.layers[i].hr_version then
-      space_con.animation.layers[i].hr_version.direction_count = 1
-    end
   end
 
   space_con.guns = nil
