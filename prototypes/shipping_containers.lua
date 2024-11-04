@@ -41,7 +41,7 @@ land_con.minable = {result=land_con.name, mining_time=1}
 land_con.icons = {{icon="__shipping-containers__/graphics/icons/container_small.png", icon_size = 64}}
 land_con.icon = nil
 land_con.icon_size = nil
-land_con.inventory_size = data.raw.container["steel-chest"].inventory_size*2
+land_con.inventory_size = settings.startup["shipping-containers-inventory-size"].value
 land_con.max_health = data.raw.container["steel-chest"].max_health*2
 land_con.collision_box = {{-0.75, -0.75}, {0.75, 0.75}}
 land_con.selection_box = {{-0.95, -0.95}, {0.95, 0.95}}
@@ -150,7 +150,7 @@ if data.raw.container["se-cargo-rocket-cargo-pod"] then
   space_con.name = "se-space-shipping-container"
   space_con.minable = {result=space_con.name, mining_time=1}
   copy_icons(data.raw.container["se-cargo-rocket-cargo-pod"], space_con)
-  space_con.inventory_size = data.raw.container["steel-chest"].inventory_size*2
+  space_con.inventory_size = settings.startup["shipping-containers-inventory-size"].value
   space_con.max_health = data.raw.container["se-cargo-rocket-cargo-pod"].max_health
   space_con.collision_box = {{-0.75, -0.75}, {0.75, 0.75}}
   space_con.selection_box = {{-0.95, -0.95}, {0.95, 0.95}}
