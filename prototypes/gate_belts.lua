@@ -4,6 +4,7 @@ if settings.startup["shipping-containers-enable-belts"].value then
     ["transport-belt"]=true,
     ["fast-transport-belt"]=true,
     ["express-transport-belt"]=true,
+    ["turbo-transport-belt"]=true,
     ["se-space-transport-belt"]=true,
   }
 
@@ -108,9 +109,9 @@ if settings.startup["shipping-containers-enable-belts"].value then
     end
     local gate_icon = data.raw.gate["gate"].icons or {{icon=data.raw.gate["gate"].icon, icon_size=data.raw.gate["gate"].icon_size or 64}}
     
-    log(serpent.block(belt_item.icons))
-    log(serpent.block(belt.icons))
-    log(serpent.block(gate_icon))
+    --log(serpent.line(belt_item.icons))
+    --log(serpent.line(belt.icons))
+    --log(serpent.line(gate_icon))
     belt.icons = util.combine_icons(belt.icons, gate_icon, {tint={1,1,1,1}, scale=0.6, shift={7,-7}}, 64)
     belt_item.icons = util.combine_icons(belt_item.icons, gate_icon, {tint={1,1,1,1}, scale=0.6, shift={7,-7}}, 64)
 
@@ -124,7 +125,7 @@ if settings.startup["shipping-containers-enable-belts"].value then
   -- Make a gate-crossing variant for every transport belt
   local belts = {}
   for name,belt in pairs(data.raw["transport-belt"]) do
-    if settings.startup["shipping-containers-modded-belts"].value or VANILLA_BELTS[name] then
+    if (settings.startup["shipping-containers-modded-belts"].value or VANILLA_BELTS[name]) and belt.minable and not belt.hidden then
       belts[#belts+1] = name
     end
   end

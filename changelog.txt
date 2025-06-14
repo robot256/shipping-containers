@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+Date: 2025-06-14
+  Changes:
+    - Updated translations from Crowdin.
+    - Added "turbo-transport-belt" to list of non-modded belts to make into gate belts.
+  Bugfixes:
+    - Fixed compatibility with Circuit-Controlled Routers and other mods with hidden or unminable belt entities.
+    - Removed some log spam.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.1
 Date: 2024-11-04
   Features:
