@@ -198,12 +198,12 @@ if data.raw.container["se-cargo-rocket-cargo-pod"] then
   local space_con_recipe = {
     type = "recipe",
     name = space_con.name,
-    result = space_con.name,
+    results = {{type="item", name=space_con.name, amount=1}},
     energy_required = 30,
     ingredients = {
-      { "steel-plate", 6 },
-      { "electronic-circuit", 4 },
-      { "iron-chest", 4 }
+      { type="item", name="steel-plate", amount=6 },
+      { type="item", name="electronic-circuit", amount=4 },
+      { type="item", name="iron-chest", amount=4 }
     },
     requester_paste_multiplier = 2,
     enabled = false,
