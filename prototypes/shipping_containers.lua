@@ -201,9 +201,9 @@ if data.raw.container["se-cargo-rocket-cargo-pod"] then
     results = {{type="item", name=space_con.name, amount=1}},
     energy_required = 30,
     ingredients = {
-      { type="item", name="steel-plate", amount=6 },
-      { type="item", name="electronic-circuit", amount=4 },
-      { type="item", name="iron-chest", amount=4 }
+      { type="item", name="steel-plate", amount=10 },
+      { type="item", name="electronic-circuit", amount=6 },
+      { type="item", name="low-density-structure", amount=10 },
     },
     requester_paste_multiplier = 2,
     enabled = false,

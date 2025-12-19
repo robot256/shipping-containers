@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.3
+Date: 2025-12-19
+  Changes:
+    - Changed recipe for Space Exploration Space Container
+  Bugfixes:
+    - Fixed compatibility with Space Exploration.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.2
 Date: 2025-06-14
   Changes:
