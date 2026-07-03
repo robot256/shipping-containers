@@ -78,7 +78,7 @@ if settings.startup["shipping-containers-enable-belts"].value then
     local belt_recipe = {
       type = "recipe",
       name = belt.name,
-      category = "crafting",
+      categories = {"crafting"},
       results = {{type="item", name=belt.name, amount=1}},
       energy_required = 10,
       enabled = false,
